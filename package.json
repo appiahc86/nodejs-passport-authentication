@@ -1,0 +1,39 @@
+{
+  "name": "nodejs-passport-authentication",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon --exec babel-node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appiahc86/nodejs-passport-authentication.git"
+  },
+  "keywords": [],
+  "author": "Appiah Collins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/appiahc86/nodejs-passport-authentication/issues"
+  },
+  "homepage": "https://github.com/appiahc86/nodejs-passport-authentication#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "express-session": "^1.17.1",
+    "mongoose": "^5.10.5",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/node": "^7.10.5"
+  }
+}
