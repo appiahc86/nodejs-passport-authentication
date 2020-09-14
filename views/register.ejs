@@ -2,33 +2,69 @@
 
 <form action="/users/register" method="post">
 
+  <!-- Name -->
     <div class="form-group">
-        <input type="text" name="name" placeholder="Name" class="form-control"
+        <input type="text" name="name"
+               placeholder="Name"
+               class="form-control <%= typeof errname !== 'undefined'? 'is-invalid': '' %>"
+               autocomplete="off"
                value="<%= typeof name !=='undefined' ? name : ''%>"
         >
 
+    <!--  Name Errors     -->
         <% if (typeof errname !== 'undefined') { %>
 
-            <p class="text-danger"><%= errname[0] %></p>
+            <span class="invalid-feedback error-message" role="alert">
+               <strong><%= errname %></strong>
+            </span>
 
         <%  } %>
 
-
-
     </div>
 
+ <!-- Email -->
     <div class="form-group">
-        <input type="email" name="email" placeholder="Email" class="form-control"
-               value="<%= typeof email !=='undefined' ? email : ''%>"
+        <input type="email" name="email"
+               placeholder="Email"
+               class="form-control <%= typeof erremail !== 'undefined'? 'is-invalid': '' %>"
+               value="<%= typeof email !== 'undefined' ? email : ''%>"
         >
+
+        <!--  Email Errors      -->
+        <% if (typeof erremail !== 'undefined'){ %>
+            <span class="invalid-feedback error-message" role="alert">
+               <strong><%= erremail %></strong>
+            </span>
+        <% } %>
+
     </div>
 
+<!-- Password -->
     <div class="form-group">
-        <input type="password" name="password" placeholder="Password" class="form-control">
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               class="form-control <%= typeof errpassword !== 'undefined'? 'is-invalid': '' %>"
+         value="<%= typeof password !== 'undefined' ? password : ''%>"
+        >
+
+        <!--   Password Errors     -->
+        <% if (typeof errpassword !== 'undefined'){ %>
+
+            <span class="invalid-feedback error-message" role="alert">
+               <strong><%= errpassword %></strong>
+            </span>
+
+        <% } %>
     </div>
 
+  <!--   Confirm Password     -->
     <div class="form-group">
-        <input type="password" name="password_confirmation" placeholder="Confirm Password" class="form-control">
+        <input type="password"
+               name="password_confirmation"
+               placeholder="Confirm Password"
+               class="form-control"
+        >
     </div>
 
     <div class="form-group">
