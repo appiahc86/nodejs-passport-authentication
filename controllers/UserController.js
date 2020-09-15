@@ -11,7 +11,7 @@ const LocalStrategy = passportLocal.Strategy;
 passport.use(
     new LocalStrategy({usernameField: 'email', }, (email, password, done) =>{
         //Match User
-        User.findOne({email: email})
+        User.findOne({email: email.toLowerCase()})
             .then(user => {
                 if (!user){
                     return done(null, false, {message: 'Email not found'})
@@ -139,7 +139,7 @@ const UserController = {
 
                         const newUser = new User({
                             name: req.body.name,
-                            email: req.body.email,
+                            email: req.body.email.toLowerCase(),
                             password: hash
                         });
 
