@@ -68,7 +68,9 @@ const UserController = {
     },
 
     logout: (req, res)=>{
-        res.send('logging out...')
+        req.logout();
+        req.flash('success_msg', 'You are logged out');
+        res.redirect('/users/login')
     },
 
     registerationForm: (req, res) => {
