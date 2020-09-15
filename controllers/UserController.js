@@ -55,10 +55,16 @@ passport.deserializeUser((id, done) => {
 const UserController = {
 
     showLoginForm: (req, res) => {
-      res.render('login');
+        //If already logged in return to dashboard
+        if (req.isAuthenticated()) {
+            return res.redirect('/dashboard');
+        }
+
+        res.render('login');
     },
 
     login: (req, res, next) => {
+
         passport.authenticate('local', {
             successRedirect: '/dashboard',
             failureRedirect: '/users/login',
@@ -74,6 +80,11 @@ const UserController = {
     },
 
     registerationForm: (req, res) => {
+        //If already logged in return to dashboard
+        if (req.isAuthenticated()) {
+            return res.redirect('/dashboard');
+        }
+
         res.render('register');
     },
 
