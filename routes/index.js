@@ -5,7 +5,10 @@ router.get('/', (req, res)=>{
     res.render('welcome');
 })
 
-
+//dashboard
+router.get('/dashboard', (req, res)=>{
+    res.render('dashboard');
+})
 
 
 

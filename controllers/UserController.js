@@ -1,10 +1,74 @@
 import Validator from 'validatorjs';
+import bcrypt from 'bcryptjs';
+import passport from 'passport';
 import User from "../models/User.js";
+
+import passportLocal from 'passport-local';
+const LocalStrategy = passportLocal.Strategy;
+
+
+//Passport auth
+passport.use(
+    new LocalStrategy({usernameField: 'email', }, (email, password, done) =>{
+        //Match User
+        User.findOne({email: email})
+            .then(user => {
+                if (!user){
+                    return done(null, false, {message: 'Email not found'})
+                }
+                //Match Passwords
+                bcrypt.compare(password, user.password, (err, isMatched) => {
+                    if (err) throw err;
+
+                    if (isMatched){
+                        return done(null, user);
+                    }else {
+                        return done(null, false, {message: 'Incorrect Password'})
+                    }
+                });
+
+
+            })
+            .catch(err => console.log(err))
+
+    })
+);
+
+
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+    User.findById(id, (err, user) => {
+        done(err, user);
+    });
+});  // End of passport config
+
+
+
+
+
+
 
 const UserController = {
 
-    login: (req, res) => {
-        res.render('login');
+    showLoginForm: (req, res) => {
+      res.render('login');
+    },
+
+    login: (req, res, next) => {
+        passport.authenticate('local', {
+            successRedirect: '/dashboard',
+            failureRedirect: '/users/login',
+            failureFlash: true
+        })(req, res, next);
+
+    },
+
+    logout: (req, res)=>{
+        res.send('logging out...')
     },
 
     registerationForm: (req, res) => {
@@ -12,8 +76,6 @@ const UserController = {
     },
 
     register: async (req, res) => {
-
-       // const {name, email, password, password_confirmation} = req.body;
 
        //Validate requests
         const validation = new Validator(
@@ -56,21 +118,30 @@ const UserController = {
             //save new user
             await validation.passes(()=> {
 
-                const newUser = new User({
-                    name: req.body.name,
-                    email: req.body.email,
-                    password: req.body.password
-                });
-
-                newUser.save().then(saved =>{
-                    //Redirect to Login Page
-                   return  res.redirect('login')
-                }).catch(err => {
-                    return res.send('could not save user');
-                })
 
 
-            });
+                //Hash Password
+                bcrypt.genSalt(10, function(err, salt) {
+                    bcrypt.hash(req.body.password, salt, function(err, hash) {
+
+                        const newUser = new User({
+                            name: req.body.name,
+                            email: req.body.email,
+                            password: hash
+                        });
+
+                        newUser.save().then(saved =>{
+                            //Redirect to Login Page
+                            req.flash('success_msg', 'Registration successful, you may login now')
+                            return  res.redirect('login')
+                        }).catch(err => {
+                            return res.send('could not save user');
+                        });
+
+                    });
+                }); // ./bcrypt
+
+            }); // ./validation passes
 
 
         }
@@ -78,7 +149,7 @@ const UserController = {
 
 
 
-    }
+    } // ./register Async
 
 
 }

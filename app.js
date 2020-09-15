@@ -2,6 +2,9 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import ejs from 'ejs';
+import flash from 'connect-flash';
+import session from 'express-session';
+import passport from 'passport';
 import mongoose from 'mongoose';
 import expressLayouts from 'express-ejs-layouts';
 
@@ -9,6 +12,8 @@ const __dirname = path.resolve();
 
 const app = express();
 
+
+//Dotenv
 dotenv.config();
 
 const port = process.env.PORT || 5000;
@@ -26,6 +31,29 @@ mongoose.connect(
 )
     .then(db =>  console.log('Database Connected'))
     .catch(error => console.log(error));
+
+//Session
+app.use(session({
+    secret: 'my-secret',
+    resave: true,
+    saveUninitialized: true
+}));
+
+//Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Flash
+app.use(flash());
+
+//Global Variables
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    res.locals.user = req.user || null;
+    next();
+});
 
 //set view engine
 app.use(expressLayouts);
